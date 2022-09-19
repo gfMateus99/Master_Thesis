@@ -12,4 +12,18 @@ Code developed to run the baseline models used in this master thesis. (Exponenti
 ### Topic modelling + Sentiment analysis
 Code developed for Topic modelling and Sentiment analysis
 
-@copyright
+
+
+### Author
+
+**Jon Schlinkert**
+
+* [github/jonschlinkert](https://github.com/jonschlinkert)
+* [twitter/jonschlinkert](https://twitter.com/jonschlinkert)
+
+### License
+
+Copyright © 2017, [Jon Schlinkert](https://github.com/jonschlinkert).
+Released under the [MIT License](LICENSE).
+
+***
