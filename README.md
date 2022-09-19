@@ -1,9 +1,11 @@
-# Master_Thesis
- code
+# Master Thesis
+Code that was developed in the scope of master thesis.
  
-## The second largest heading
+## Organization of the repository
 
-1. Baseline Models
-   - Code for the baseline models
+### Baseline Models
+Code developed to run the baseline models used in this master thesis. (Exponential Smoothing, Prophet, LSTM, SARIMA and Transformer)
 
-###### The smallest heading
+### Topic modelling + Sentiment analysis
+Code developed for Topic modelling and Sentiment analysis
+
