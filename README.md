@@ -1,5 +1,5 @@
 # Master Thesis Repository
-
+## Overview
 **Repository with the code for the thesis:** 
 - Data and computer center prediction of usage and cost: An interpretable machine learning approach.
 
@@ -8,12 +8,8 @@
  
 ## Organization of this repository
 
-### Interpretable Models
-Code developed to run the interpretable models.
-
-- code1
-
 ### Baseline Models
+##
 Code developed to run the baseline models used in this master thesis. 
 
 - **Exponential Smoothing -** [Baseline_Models-ExponentialSmoothing.py]
@@ -23,6 +19,7 @@ Code developed to run the baseline models used in this master thesis.
 - **Transformer -** [Baseline_Models-Transformer.py]
 
 ### Topic modelling + Sentiment analysis
+##
 Code developed for Topic modelling and Sentiment analysis
 
 - **Get Tweets Program -** [Get_Tweets_Program.py] 
@@ -31,7 +28,14 @@ Code developed for Topic modelling and Sentiment analysis
 - **Pre-processing text analysis -** [Pre-processing Text.ipynb]
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
 
+### Interpretable Models
+##
+Code developed to run the interpretable models.
+
+- code1
+
 ### Documents and Reports
+##
 Master thesis documents and reports.
 
 
