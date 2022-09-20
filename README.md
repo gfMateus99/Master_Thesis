@@ -32,14 +32,13 @@ Code developed for Topic modelling and Sentiment analysis
 Master thesis documents and reports.
 
 
-
 ## Author
 
 **Gonçalo Furtado Mateus**
 
-* [github/gfMateus99](https://github.com/gfMateus99)
-* goncalomateus99@gmail.com
-* https://www.linkedin.com/in/gonçalo-mateus/
+* **Github -** [github/gfMateus99](https://github.com/gfMateus99)
+* **Email -** goncalomateus99@gmail.com
+* **LinkedIn -** https://www.linkedin.com/in/gonçalo-mateus/
 
 ## License
 Copyright © Gonçalo Furtado Mateus, NOVA School of Science and Technology, NOVA University Lisbon, Novobanco.
