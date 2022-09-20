@@ -28,7 +28,7 @@ Code developed for Topic modelling and Sentiment analysis
 - **Pre-processing text analysis-** [Pre-processing Text.ipynb]
   - Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging
 
-### Documents/Reports
+### Documents and Reports
 Master thesis documents and reports.
 
 
