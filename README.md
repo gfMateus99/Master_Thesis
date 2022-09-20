@@ -2,51 +2,15 @@
 
 **Repository with the code for the thesis:** Data and computer center prediction of usage and cost: An interpretable machine learning approach.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
-## About The Project
-
 **Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we will develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
 
-### Built With
+**Built With:** 
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+[![Python][Python.js]][Python-url] [![Jupyter][Jupyter.js]][Jupyter-url] 
  
 ## Organization of this repository
 
 ### Baseline Models
-##
 Code developed to run the baseline models used in this master thesis. 
 
 - **Exponential Smoothing -** [Baseline_Models-ExponentialSmoothing.py]
@@ -56,7 +20,6 @@ Code developed to run the baseline models used in this master thesis.
 - **Transformer -** [Baseline_Models-Transformer.py]
 
 ### Topic modelling + Sentiment analysis
-##
 Code developed for Topic modelling and Sentiment analysis
 
 - **Get Tweets Program -** [Get_Tweets_Program.py] 
@@ -66,13 +29,11 @@ Code developed for Topic modelling and Sentiment analysis
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
 
 ### Interpretable Models
-##
 Code developed to run the interpretable models.
 
 - code1
 
 ### Documents and Reports
-##
 Master thesis documents and reports.
 
 
@@ -106,3 +67,12 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and Novoba
 [Baseline_Models-Transformer.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Transformer.py>
 [Pre-processing Text.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Pre-processing%20Text.ipynb>
    
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[Python.js]: https://img.shields.io/badge/Python-35495E?style=for-the-badge&logo=python&logoColor=blue
+[Python-url]: https://nextjs.org/
+
+[Jupyter.js]: https://img.shields.io/badge/Jupyter_notebook-35495E?style=for-the-badge&logo=Jupyter&logoColor=orange
+[Jupyter-url]: https://nextjs.org/
+
