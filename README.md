@@ -27,15 +27,19 @@ Code developed for Topic modelling and Sentiment analysis
 
 - **Pre-processing text analysis-** [Pre-processing Text.ipynb]
   - Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging
-  
+
+### Documents/Reports
+Master thesis documents and reports.
+
 
 
 ## Author
 
-**Gonçalo Mateus**
+**Gonçalo Furtado Mateus**
 
 * [github/gfMateus99](https://github.com/gfMateus99)
 * goncalomateus99@gmail.com
+* https://www.linkedin.com/in/gonçalo-mateus/
 
 ## License
 Copyright © Gonçalo Furtado Mateus, NOVA School of Science and Technology, NOVA University Lisbon, Novobanco.
