@@ -17,15 +17,17 @@ Code developed to run the interpretable models.
 Code developed to run the baseline models used in this master thesis. 
 
 - **Exponential Smoothing -** [Baseline_Models-ExponentialSmoothing.py]
-- **LSTM -** [Baseline_Models-LSTM.py]
+- **Long short-term memory (LSTM) -** [Baseline_Models-LSTM.py]
 - **Prophet -** [Baseline_Models-Prophet.py]
-- **SARIMA -** [Baseline_Models-SARIMA.py]
+- **Seasonal Autoregressive Integrated Moving Average (SARIMA) -** [Baseline_Models-SARIMA.py]
 - **Transformer -** [Baseline_Models-Transformer.py]
 
 ### Topic modelling + Sentiment analysis
 Code developed for Topic modelling and Sentiment analysis
 
-- [Pre-processing Text.ipynb]
+- **Pre-processing text analysis-** [Pre-processing Text.ipynb]
+  - Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging
+  
 
 
 ## Author
@@ -45,10 +47,10 @@ Code developed for Topic modelling and Sentiment analysis
 
 
 
-[Baseline_Models-ExponentialSmoothing.py]: <[http://angularjs.org](https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py)>
-[Baseline_Models-LSTM.py]: <[http://angularjs.org](https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-LSTM.py)>
-[Baseline_Models-Prophet.py]: <[http://angularjs.org](https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Prophet.py)>
-[Baseline_Models-SARIMA.py]: <[http://angularjs.org](https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-SARIMA.py)>
-[Baseline_Models-Transformer.py]: <[http://angularjs.org](https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Transformer.py)>
+[Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
+[Baseline_Models-LSTM.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-LSTM.py>
+[Baseline_Models-Prophet.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Prophet.py>
+[Baseline_Models-SARIMA.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-SARIMA.py>
+[Baseline_Models-Transformer.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Transformer.py>
 [Pre-processing Text.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Pre-processing%20Text.ipynb>
    
