@@ -16,13 +16,11 @@ Code developed to run the interpretable models.
 ### Baseline Models
 Code developed to run the baseline models used in this master thesis. 
 
-- [AngularJS] - HTML enhanced for web apps!
-
-- **Exponential Smoothing -** Baseline_Models-ExponentialSmoothing.py
-- **LSTM -** Baseline_Models-LSTM.py
-- **Prophet -** Baseline_Models-Prophet.py
-- **SARIMA -** Baseline_Models-SARIMA.py
-- **Transformer -** Baseline_Models-Transformer.py
+- **Exponential Smoothing -** [Baseline_Models-ExponentialSmoothing.py]
+- **LSTM -** [Baseline_Models-LSTM.py]
+- **Prophet -** [Baseline_Models-Prophet.py]
+- **SARIMA -** [Baseline_Models-SARIMA.py]
+- **Transformer -** [Baseline_Models-Transformer.py]
 
 ### Topic modelling + Sentiment analysis
 Code developed for Topic modelling and Sentiment analysis
