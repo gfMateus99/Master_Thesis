@@ -1,7 +1,5 @@
 # Master Thesis Repository
 
-## Overview
-
 **Repository with the code for the thesis:** 
 - Data and computer center prediction of usage and cost: An interpretable machine learning approach.
 
@@ -37,8 +35,12 @@ Code developed for Topic modelling and Sentiment analysis
 **Gonçalo Mateus**
 
 * [github/gfMateus99](https://github.com/gfMateus99)
+* goncalomateus99@gmail.com
 
-## 
+## License
+Copyright © Gonçalo Furtado Mateus, NOVA School of Science and Technology, NOVA University Lisbon, Novobanco.
+
+The NOVA School of Science and Technology, the NOVA University Lisbon and Novobanco have the right, perpetual and without geographical boundaries, to file and publish this dissertation through printed copies reproduced on paper or on digital form, or by any other means known or that may be invented, and to disseminate through scientific repositories and admit its copying and distribution for non-commercial, educational or research purposes, as long as credit is given to the author and editor.
 
 <p float="left">
  <img alt="alt_text" src="https://www.meiosepublicidade.pt/wp-content/uploads/2021/02/logo-nova-school-of-science-and-technology.jpg" data-canonical-src="https://www.novobanco.pt/" width="90" height="55"/> 
