@@ -25,7 +25,10 @@ Code developed to run the baseline models used in this master thesis.
 ### Topic modelling + Sentiment analysis
 Code developed for Topic modelling and Sentiment analysis
 
-- **Pre-processing text analysis-** [Pre-processing Text.ipynb]
+- **Get Tweets Program -** [Get_Tweets_Program.py] 
+  - Program to collect tweets via Twitter API (In case of using this script, you need to insert your Twitter API token keys)
+
+- **Pre-processing text analysis -** [Pre-processing Text.ipynb]
   - Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging
 
 ### Documents and Reports
@@ -54,7 +57,7 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and Novoba
 </div>
 </p>
 
-
+[Get_Tweets_Program.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Get_Tweets_Program.py>
 [Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
 [Baseline_Models-LSTM.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-LSTM.py>
 [Baseline_Models-Prophet.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Prophet.py>
