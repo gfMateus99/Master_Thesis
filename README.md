@@ -32,27 +32,27 @@ Code developed for Topic modelling and Sentiment analysis
 Master thesis documents and reports.
 
 
-
 ## Author
 
 **Gonçalo Furtado Mateus**
 
-* [github/gfMateus99](https://github.com/gfMateus99)
-* goncalomateus99@gmail.com
-* https://www.linkedin.com/in/gonçalo-mateus/
+* **Github -** [github/gfMateus99](https://github.com/gfMateus99)
+* **Email -** goncalomateus99@gmail.com
+* **LinkedIn -** https://www.linkedin.com/in/gonçalo-mateus/
 
 ## License
 Copyright © Gonçalo Furtado Mateus, NOVA School of Science and Technology, NOVA University Lisbon, Novobanco.
 
 The NOVA School of Science and Technology, the NOVA University Lisbon and Novobanco have the right, perpetual and without geographical boundaries, to file and publish this dissertation through printed copies reproduced on paper or on digital form, or by any other means known or that may be invented, and to disseminate through scientific repositories and admit its copying and distribution for non-commercial, educational or research purposes, as long as credit is given to the author and editor.
 
-<p float="left">
- <img alt="alt_text" src="https://www.meiosepublicidade.pt/wp-content/uploads/2021/02/logo-nova-school-of-science-and-technology.jpg" data-canonical-src="https://www.novobanco.pt/" width="90" height="55"/> 
- <img src="https://cdn.myportfolio.com/52c9985fffa93e38c02cab522b6c8a04/2ab2b72c-4b71-47ae-95c6-89ac45f6bbb3_rw_1920.jpg?h=8c9e8cefaf642aa87853288a04eccc1d" data-canonical-src="https://cdn.myportfolio.com/52c9985fffa93e38c02cab522b6c8a04/2ab2b72c-4b71-47ae-95c6-89ac45f6bbb3_rw_1920.jpg?h=8c9e8cefaf642aa87853288a04eccc1d" width="155" height="50" />
+<p float="left" >
+
+<div>
+<img align="center" alt="alt_text" src="https://www.unl.pt/sites/default/files/nova_logo21_hp.png" data-canonical-src="https://www.unl.pt/sites/default/files/nova_logo21_hp.png" width="100" height="45" style="margin-top: 20px"/>  &nbsp;
+<img align="center" alt="alt_text" src="https://www.meiosepublicidade.pt/wp-content/uploads/2021/02/logo-nova-school-of-science-and-technology.jpg" data-canonical-src="https://www.novobanco.pt/" width="120" height="80" />  &nbsp; 
+<img align="center" src="https://cdn.myportfolio.com/52c9985fffa93e38c02cab522b6c8a04/2ab2b72c-4b71-47ae-95c6-89ac45f6bbb3_rw_1920.jpg?h=8c9e8cefaf642aa87853288a04eccc1d" data-canonical-src="https://cdn.myportfolio.com/52c9985fffa93e38c02cab522b6c8a04/2ab2b72c-4b71-47ae-95c6-89ac45f6bbb3_rw_1920.jpg?h=8c9e8cefaf642aa87853288a04eccc1d" width="190" height="60" />  &nbsp;
+</div>
 </p>
-
-
-
 
 
 [Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
