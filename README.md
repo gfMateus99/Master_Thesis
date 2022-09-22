@@ -29,7 +29,7 @@ Code developed for Topic modelling and Sentiment analysis
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
 
 - **Topic Modelling model code -** [Topic Modelling.ipynb]
-  - Program to run topic modelling model (DMM with Gibbs Sampling).
+  - Script created to run topic modelling model (DMM with Gibbs Sampling).
 
 ### Interpretable Models
 Code developed to run the interpretable models.
