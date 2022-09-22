@@ -77,8 +77,8 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the no
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [Python.js]: https://img.shields.io/badge/Python-35495E?style=for-the-badge&logo=python&logoColor=blue
-[Python-url]: https://nextjs.org/
+[Python-url]: https://www.python.org/
 
 [Jupyter.js]: https://img.shields.io/badge/Jupyter_notebook-35495E?style=for-the-badge&logo=Jupyter&logoColor=orange
-[Jupyter-url]: https://nextjs.org/
+[Jupyter-url]: https://jupyter.org/
 
