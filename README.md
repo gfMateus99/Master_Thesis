@@ -28,6 +28,9 @@ Code developed for Topic modelling and Sentiment analysis
 - **Pre-processing text analysis -** [Pre-processing Text.ipynb]
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
 
+- **Topic Modelling model code -** [Topic Modelling.ipynb]
+  - Program to run topic modelling model (DMM with Gibbs Sampling).
+
 ### Interpretable Models
 Code developed to run the interpretable models.
 
@@ -66,6 +69,9 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and Novoba
 [Baseline_Models-SARIMA.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-SARIMA.py>
 [Baseline_Models-Transformer.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Transformer.py>
 [Pre-processing Text.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Pre-processing%20Text.ipynb>
+[Topic Modelling.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Topic%20Modelling.ipynb>
+
+   
    
 
 <!-- MARKDOWN LINKS & IMAGES -->
