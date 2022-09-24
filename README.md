@@ -2,7 +2,7 @@
 
 **Repository with the code for the thesis:** Data and computer center prediction of usage and cost: An interpretable machine learning approach.
 
-**Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we will develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
+**Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
 
 **Built With:** 
 
