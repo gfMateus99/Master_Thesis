@@ -23,7 +23,7 @@ Code developed to run the baseline models used in this master thesis.
 Code developed for Topic modelling and Sentiment analysis
 
 - **Get Tweets Program -** [Get_Tweets_Program.py] 
-  - Program to collect tweets via Twitter API (In case of using this script, you need to insert your own Twitter API token keys).
+  - Program to collect tweets via Twitter API (**Note:** In case of using this script, you need to insert your own Twitter API token keys).
 
 - **Pre-processing text analysis -** [Pre-processing Text.ipynb]
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
