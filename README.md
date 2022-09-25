@@ -28,6 +28,9 @@ Code developed for Topic modelling and Sentiment analysis
 - **Pre-processing text analysis -** [Pre-processing Text.ipynb]
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
 
+- **Sentiment Analysis code -** [Sentiment Analysis.py]
+  - Dictionary-based sentiment analysis using [SentiLex-PT] and [EMOTAIX.PT] dictionaries.
+
 - **Topic Modelling model code -** [Topic Modelling.ipynb]
   - Script created to run topic modelling model (DMM with Gibbs Sampling).
 
@@ -70,9 +73,10 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the no
 [Baseline_Models-Transformer.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Transformer.py>
 [Pre-processing Text.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Pre-processing%20Text.ipynb>
 [Topic Modelling.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Topic%20Modelling.ipynb>
+[Sentiment Analysis.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Sentiment%20Analysis.py>  
+[SentiLex-PT]: <https://b2find.eudat.eu/dataset/b6bd16c2-a8ab-598f-be41-1e7aeecd60d3>  
+[EMOTAIX.PT]: <https://portulanclarin.net/repository/browse/emotaixpt/c2c715c0b1b111ea803e02420a0004034aecafbdb25f4a9787e7a27c9da6bd6a/>  
 
-   
-   
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
