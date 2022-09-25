@@ -60,7 +60,7 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the no
 
 <div>
 <img align="center" alt="alt_text" src="https://www.unl.pt/sites/default/files/nova_logo21_hp.png" data-canonical-src="https://www.unl.pt/sites/default/files/nova_logo21_hp.png" width="100" height="45" style="margin-top: 20px"/>  &nbsp;
-<img align="center" alt="alt_text" src="https://www.meiosepublicidade.pt/wp-content/uploads/2021/02/logo-nova-school-of-science-and-technology.jpg" data-canonical-src="https://www.novobanco.pt/" width="120" height="80" />  &nbsp; 
+<img align="center" alt="alt_text" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Novologofct2021.png/1280px-Novologofct2021.png" data-canonical-src="https://www.novobanco.pt/" width="120" height="80" />  &nbsp; 
 <img align="center" src="https://cdn.myportfolio.com/52c9985fffa93e38c02cab522b6c8a04/2ab2b72c-4b71-47ae-95c6-89ac45f6bbb3_rw_1920.jpg?h=8c9e8cefaf642aa87853288a04eccc1d" data-canonical-src="https://cdn.myportfolio.com/52c9985fffa93e38c02cab522b6c8a04/2ab2b72c-4b71-47ae-95c6-89ac45f6bbb3_rw_1920.jpg?h=8c9e8cefaf642aa87853288a04eccc1d" width="190" height="60" />  &nbsp;
 </div>
 </p>
