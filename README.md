@@ -65,6 +65,13 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the no
 </div>
 </p>
 
+Acknowledgments:
+
+University of Pretoria 
+![Tuks Logo](/Images/UPlogohighres.jpg)
+
+
+
 [Get_Tweets_Program.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Get_Tweets_Program.py>
 [Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
 [Baseline_Models-LSTM.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-LSTM.py>
