@@ -199,11 +199,12 @@ df.to_csv(f'{fileName} - Sentiment (Idiomatic).csv')
      
 #%% Sentiment analysis with Emotaix.pt
 
-custom_date_parser = lambda x: datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
-df = pd.read_csv(r'{fileName} - Sentiment (Idiomatic).csv', 
-                  parse_dates=['created_at'],
-                  date_parser=custom_date_parser,
+#custom_date_parser = lambda x: datetime.strptime(x, "%Y-%m-%dT%H:%M:%S")
+df = pd.read_csv(r'AllMediaTweets_DF(Filter by keywords) - Sentiment (Idiomatic).csv', 
+                  #parse_dates=['created_at'],
+                  #date_parser=custom_date_parser,
                   low_memory=False)
+df.drop("Unnamed: 0", inplace=True, axis=1)
 
 emotaix = emotaix.iloc[: , 1:]
 emotaix = emotaix.reset_index()  # make sure indexes pair with number of rows
