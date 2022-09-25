@@ -10,6 +10,11 @@
  
 ## Organization of this repository
 
+### Interpretable Models
+Code developed to run the interpretable models.
+
+- code1
+
 ### Baseline Models
 Code developed to run the baseline models used in this master thesis. 
 
@@ -34,13 +39,8 @@ Code developed for Topic modelling and Sentiment analysis
 - **Topic Modelling model code -** [Topic Modelling.ipynb]
   - Script created to run topic modelling model (DMM with Gibbs Sampling).
 
-### Interpretable Models
-Code developed to run the interpretable models.
-
-- code1
-
 ### Documents and Reports
-Master thesis documents and reports.
+  - [Master thesis document].
 
 
 ## Author
@@ -77,6 +77,7 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the no
 [Sentiment Analysis.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Sentiment%20Analysis.py>  
 [SentiLex-PT]: <https://b2find.eudat.eu/dataset/b6bd16c2-a8ab-598f-be41-1e7aeecd60d3>  
 [EMOTAIX.PT]: <https://portulanclarin.net/repository/browse/emotaixpt/c2c715c0b1b111ea803e02420a0004034aecafbdb25f4a9787e7a27c9da6bd6a/>  
+[Master thesis document]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Documents%20and%20Reports/Thesis_Final.pdf/>  
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
