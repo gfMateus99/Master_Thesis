@@ -2,7 +2,7 @@
 
 **Repository with the code for the thesis:** Data and computer center prediction of usage and cost: An interpretable machine learning approach.
 
-**Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we will develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
+**Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
 
 **Built With:** 
 
@@ -23,10 +23,13 @@ Code developed to run the baseline models used in this master thesis.
 Code developed for Topic modelling and Sentiment analysis
 
 - **Get Tweets Program -** [Get_Tweets_Program.py] 
-  - Program to collect tweets via Twitter API (In case of using this script, you need to insert your own Twitter API token keys).
+  - Program to collect tweets via Twitter API (**Note:** In case of using this script, you need to insert your own Twitter API token keys).
 
 - **Pre-processing text analysis -** [Pre-processing Text.ipynb]
   - Program to pre-process text to Sentiment analysis and topic modelling (Cleaning Text, Tokenization, Reduce Text (Stopwords removal and Remove small words(<=2 characters)), Obtaining the stem words and pos tagging).
+
+- **Topic Modelling model code -** [Topic Modelling.ipynb]
+  - Script created to run topic modelling model (DMM with Gibbs Sampling).
 
 ### Interpretable Models
 Code developed to run the interpretable models.
@@ -48,7 +51,7 @@ Master thesis documents and reports.
 ## License
 Copyright © Gonçalo Furtado Mateus, NOVA School of Science and Technology, NOVA University Lisbon, Novobanco.
 
-The NOVA School of Science and Technology, the NOVA University Lisbon and Novobanco have the right, perpetual and without geographical boundaries, to file and publish this dissertation through printed copies reproduced on paper or on digital form, or by any other means known or that may be invented, and to disseminate through scientific repositories and admit its copying and distribution for non-commercial, educational or research purposes, as long as credit is given to the author and editor.
+The NOVA School of Science and Technology, the NOVA University Lisbon and the novobanco have the right, perpetual and without geographical boundaries, to file and publish this dissertation through printed copies reproduced on paper or on digital form, or by any other means known or that may be invented, and to disseminate through scientific repositories and admit its copying and distribution for non-commercial, educational or research purposes, as long as credit is given to the author and editor.
 
 <p float="left" >
 
@@ -66,13 +69,16 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and Novoba
 [Baseline_Models-SARIMA.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-SARIMA.py>
 [Baseline_Models-Transformer.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-Transformer.py>
 [Pre-processing Text.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Pre-processing%20Text.ipynb>
+[Topic Modelling.ipynb]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Topic%20Modelling.ipynb>
+
+   
    
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [Python.js]: https://img.shields.io/badge/Python-35495E?style=for-the-badge&logo=python&logoColor=blue
-[Python-url]: https://nextjs.org/
+[Python-url]: https://www.python.org/
 
 [Jupyter.js]: https://img.shields.io/badge/Jupyter_notebook-35495E?style=for-the-badge&logo=Jupyter&logoColor=orange
-[Jupyter-url]: https://nextjs.org/
+[Jupyter-url]: https://jupyter.org/
 
