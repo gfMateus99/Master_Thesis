@@ -11,12 +11,10 @@
 ## Organization of this repository
 
 ### Interpretable Models
-Code developed to run the interpretable models.
 
 - code1
 
 ### Baseline Models
-Code developed to run the baseline models used in this master thesis. 
 
 - **Exponential Smoothing -** [Baseline_Models-ExponentialSmoothing.py]
 - **Long short-term memory (LSTM) -** [Baseline_Models-LSTM.py]
@@ -25,7 +23,6 @@ Code developed to run the baseline models used in this master thesis.
 - **Transformer -** [Baseline_Models-Transformer.py]
 
 ### Topic modelling + Sentiment analysis
-Code developed for Topic modelling and Sentiment analysis
 
 - **Get Tweets Script -** [Get_Tweets_Program.py] 
   - Program to collect tweets via Twitter API (**Note:** In case of using this script, you need to insert your own Twitter API token keys).
