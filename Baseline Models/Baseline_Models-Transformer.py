@@ -299,7 +299,7 @@ def get_best_model(transformer, trainTransformed, valTransformed, seriesTransfor
     
     best_mae = math.inf
     best_mse = math.inf
-    best_specs = (0,0,0,0,0)
+    best_specs = (0,0,0)
     
     for x in tqdm(combinations):
         lstm_model, mae_cross_val, mse_cross_val = run_transformer_model(transformer, 
@@ -402,7 +402,7 @@ for server in patterns_data:
         
         result_transformer_test = pd.DataFrame(result_transformer)
         result_transformer_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
-        result_transformer_test.to_csv(f'Results/result_transformer_test({names[count].split("(")[0]}_{date}).csv')
+        result_transformer_test.to_csv(f'Results/result_transformer_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
         
         print('# ================================================================')    
         

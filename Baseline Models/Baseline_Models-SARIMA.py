@@ -25,6 +25,8 @@ from statsmodels.tsa.stattools import adfuller
 from itertools import product
 from darts.models import ARIMA
 from tqdm import tqdm
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -217,12 +219,14 @@ def get_best_model(parameters_list, s, train):
     
     return result_df
 
-def best_model(series,train, val, p,d,q):
+def best_model(series,train, val, p, d, q, P, D, Q, s):
     """
 
     """
-    model = ARIMA(p,d,q)
+    model = stm.tsa.statespace.SARIMAX(train, order=(p, d, q), seasonal_order=(P, D, Q, s))
+    
     model.fit(train)
+    
     prediction = model.predict(len(val))
     # series.plot()
     # prediction.plot(label='forecast', low_quantile=0.05, high_quantile=0.95)
@@ -231,6 +235,48 @@ def best_model(series,train, val, p,d,q):
     val_predictions = val._xa.values.flatten()
     error = sm.mean_absolute_error(val_predictions, predictions)
     return error
+
+
+def run_sarima_model(train, val, p, d, q, P, D, Q, s):
+    """
+        Return prophet model with gice definitions and fit 
+        
+        prophet_dataframe - dataframe to train
+        yearly_seasonality - yearly seasonality
+        daily_seasonality - daily seasonality
+        weekly_seasonality - weekly seasonality
+        growth - growth of model
+        seasonality_mode - mode of seasonality
+        holidays - holidays to model
+    """
+    #Define the model
+    model = stm.tsa.statespace.SARIMAX(train, order=(p, d, q), seasonal_order=(P, D, Q, s)).fit(disp=-1)
+
+    #Fit the model
+    #model.fit(train)
+
+    return model
+
+
+def compute_errors(forecast, val, periods):
+    """
+        Compute model errors
+        
+        forecast - forecast
+        val - validation set
+        periods - periods to validate
+    """
+        
+    #Compute Errors (MAE and MSE)
+    val = val._xa.values.flatten()
+    
+    mae_cross_val = mean_absolute_error(forecast, val)
+    mse_cross_val = mean_squared_error(forecast, val)
+    
+    #print('MAE: ', mae_cross_val)
+    #print('MSE: ', mse_cross_val)
+    
+    return mae_cross_val, mse_cross_val
 
 #%% Load files
 
@@ -347,12 +393,57 @@ for server in patterns_data:
         result_sarima.to_csv('Results/result_sarima_statistics/'+names[count]+"--"+str(str(date).split(" ")[0])+".csv" )
         print('# ================================================================')
         
-        # 7: With the best model test with cross validation
+    count += 1
+
+#%% With the best model test with cross validation
+
+count = 0
+
+for server in patterns_data:
+    print('# ================================================================')    
+    #print(names[count]) #Pattern + Server name
+    
+    # 1: Get dataframe and dates to split ranges
+    dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
+    for date in dates_to_split:
+        print(names[count]+"--"+str(str(date).split(" ")[0])+".csv")
+        results_model = pd.read_csv('Results/result_sarima_statistics/'+names[count]+"--"+str(str(date).split(" ")[0])+".csv") 
         
+        parameters = results_model.iloc[0]["(p, d, q)x(P, D, Q)"].split("(")[1].split(")")[0].split(",")
         
+        cross_validation_date = date
+
+        mae_cross = []
+        mse_cross = []
+        
+        for x in tqdm(range(0, 29)):
+        
+            dataToAnalyze = server
+            # 2: Split dataframe in train and validation set
+            train_timeseries, val_timeseries, train_df, val_df = split_dataframe(dataToAnalyze, date, 1, names[count]+"--"+str(str(date).split(" ")[0]))
+            
+            # 4: Standardize the data
+            #mean_y = train_timeseries._xa.values.flatten().mean()
+            #std_y = train_timeseries._xa.values.flatten().std()
+            train_timeseries = train_timeseries._xa.values.flatten()
+            #train_timeseries = (train_timeseries-mean_y)/std_y
+
+            sarima_model = run_sarima_model(train_timeseries, val_timeseries, int(parameters[0]), int(parameters[1]), int(parameters[2]), int(parameters[3]), int(parameters[4]), int(parameters[5]), int(parameters[6]))
+            
+            periods = 4        
+            #future = sarima_model.make_future_dataframe(periods=periods, freq="6H")
+
+            forecast = sarima_model.predict(start=train_timeseries.shape[0], end=train_timeseries.shape[0]+3)
+            mae, mse = compute_errors(forecast, val_timeseries, periods)
+            
+            mae_cross.append(mae)
+            mse_cross.append(mse)
+            
+            cross_validation_date = cross_validation_date + datetime.timedelta(days=1)
+
+        print('# ================================================================')
         
     count += 1
-    
 
-# 8: Test with covariates
+#Test with covariates
 
