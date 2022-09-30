@@ -53,7 +53,7 @@
 ## License
 Copyright © Gonçalo Furtado Mateus, NOVA School of Science and Technology, NOVA University Lisbon, Novobanco.
 
-The NOVA School of Science and Technology, the NOVA University Lisbon and the novobanco have the right, perpetual and without geographical boundaries, to file and publish this dissertation through printed copies reproduced on paper or on digital form, or by any other means known or that may be invented, and to disseminate through scientific repositories and admit its copying and distribution for non-commercial, educational or research purposes, as long as credit is given to the author and editor.
+The NOVA School of Science and Technology, the NOVA University Lisbon and the Novobanco have the right, perpetual and without geographical boundaries, to file and publish this dissertation through printed copies reproduced on paper or on digital form, or by any other means known or that may be invented, and to disseminate through scientific repositories and admit its copying and distribution for non-commercial, educational or research purposes, as long as credit is given to the author and editor.
 
 <p float="left" >
 
