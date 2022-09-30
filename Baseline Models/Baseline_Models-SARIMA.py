@@ -13,6 +13,7 @@ Baseline study - SARIMA MODEL
 import os
 import pandas as pd
 from datetime import datetime, timedelta
+import numpy as np
 
 from darts import TimeSeries
 import sklearn.metrics as sm
@@ -345,7 +346,7 @@ patterns_data, predictDates_6hours = load_patterns_data("6_hours")
 
 names = os.listdir('Data/Patterns_files/6_hours')
 count = 0
-
+"""
 for server in patterns_data:
     print('# ================================================================')    
     print(names[count]) #Pattern + Server name
@@ -394,11 +395,11 @@ for server in patterns_data:
         print('# ================================================================')
         
     count += 1
-
+"""
 #%% With the best model test with cross validation
 
 count = 0
-
+result_sarima = []
 for server in patterns_data:
     print('# ================================================================')    
     #print(names[count]) #Pattern + Server name
@@ -438,12 +439,21 @@ for server in patterns_data:
             
             mae_cross.append(mae)
             mse_cross.append(mse)
-            
+                        
             cross_validation_date = cross_validation_date + datetime.timedelta(days=1)
 
+        print('MAE_Cross: ', np.mean(mae_cross))
+        print('MSE_Cross: ', np.mean(mse_cross))
+        
+        result_sarima.append([names[count], np.mean(mae_cross), np.mean(mse_cross)])
+        
         print('# ================================================================')
         
     count += 1
+
+result_sarima = pd.DataFrame(result_sarima)
+result_sarima.columns = ['server', 'MAE', 'MSE']
+result_sarima.to_csv('Results/result_sarima.csv')
 
 #Test with covariates
 

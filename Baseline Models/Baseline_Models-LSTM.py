@@ -401,7 +401,7 @@ for server in patterns_data:
         
         result_lstm_test = pd.DataFrame(result_lstm)
         result_lstm_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
-        result_lstm_test.to_csv(f'Results/result_lstm_test({names[count].split("(")[0]}_{date}).csv')
+        result_lstm_test.to_csv(f'Results/result_lstm_backup/result_lstm_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
         
         print('# ================================================================')    
         
