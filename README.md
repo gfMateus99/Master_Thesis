@@ -12,9 +12,10 @@
  
 ## Organization of this repository
 
-### Interpretable Models
+### Ensemble Model (Interpretable)
 
-- code1
+- **Ensemble Model -**
+  - Model that uses...
 
 ### Baseline Models
 
