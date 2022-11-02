@@ -15,7 +15,7 @@
 ### Ensemble Model (Interpretable)
 
 - **Ensemble Model Files-** [Ensemble Model (Interpretable)]
-  - Folder with the ensemble Model. Inside this folder is an README.md file explainning how you can use this model with your own data.
+  - Folder with the ensemble Model. Inside this folder is an [README.md] file explainning how you can use this model with your own data.
 
 ### Baseline Models
 
@@ -65,6 +65,10 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the No
 </div>
 </p>
 
+
+
+
+[README.md]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Ensemble%20Model%20(Interpretable)/README.md>
 [Ensemble Model (Interpretable)]: <https://github.com/gfMateus99/Master_Thesis/tree/main/Ensemble%20Model%20(Interpretable)>
 [Get_Tweets_Program.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Get_Tweets_Program.py>
 [Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
