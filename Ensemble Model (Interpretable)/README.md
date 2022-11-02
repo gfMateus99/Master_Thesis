@@ -28,7 +28,7 @@ Ensemble Model (Interpretable)/
 ├─── README.md  
 </pre>
 
-## MODEL_NAME
+## EAMDrift_model
 
 ### Getting Started:
 <pre>
@@ -40,15 +40,17 @@ Ensemble Model (Interpretable)/
 1
 </pre>
 
-### Function and class description:
+### Methods and Parameters:
 <pre>
 1
 </pre>
 
+### Input:
+
 ### Output:
 
 
-## Example Usage (MODEL_NAME):
+## Example Usage (EAMDrift_model):
 
 
 
