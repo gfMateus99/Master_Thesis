@@ -30,3 +30,7 @@ Ensemble Model (Interpretable)/
 </pre>
 
 ## Tutorial
+
+<pre>
+1 - Download the folder Ensemble Model (Interpretable).
+</pre>
