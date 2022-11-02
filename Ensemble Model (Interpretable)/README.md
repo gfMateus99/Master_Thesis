@@ -1,13 +1,12 @@
 # Ensemble Model (Interpretable)
 
-Model Overview
---------------
+## Preamble
+
 1) Ensemble
 2) Based on Mixure of Experts (weights)
 3) Interpretable model
 4) Real-time re-trainning
 5) Allows past, future, and static co-variates
-----------------------------------------------
 
 ## Folder Structure
 
@@ -29,8 +28,31 @@ Ensemble Model (Interpretable)/
 ├─── README.md  
 </pre>
 
-## Tutorial
+## MODEL_NAME
 
+### Getting Started:
 <pre>
-1 - Download the folder Ensemble Model (Interpretable).
+1
 </pre>
+
+### Prerequisites:
+<pre>
+1
+</pre>
+
+### Function and class description:
+<pre>
+1
+</pre>
+
+### Output:
+
+
+## Example Usage (MODEL_NAME):
+
+
+
+
+
+
+
