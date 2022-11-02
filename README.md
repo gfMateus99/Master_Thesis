@@ -14,7 +14,7 @@
 
 ### Ensemble Model (Interpretable)
 
-- **Ensemble Model -**
+- **Ensemble Model -** [Baseline_Models-ExponentialSmoothing.py]
   - Model that uses...
 
 ### Baseline Models
@@ -65,7 +65,7 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the No
 </div>
 </p>
 
-
+[Ensemble Model (Interpretable).py]: <https://github.com/gfMateus99/Master_Thesis/tree/main/Ensemble%20Model%20(Interpretable)>
 [Get_Tweets_Program.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Get_Tweets_Program.py>
 [Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
 [Baseline_Models-LSTM.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-LSTM.py>
