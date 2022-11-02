@@ -4,7 +4,7 @@
 
 **Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
 
-**Note:** This repository presents only the most important code scripts developed for the objective of this thesis. Some other scripts (for creating the plots, managing parts of data, etc...) are not shown in this script.
+**Note:** This repository presents only the most important code scripts developed for the objective of this thesis. Some other scripts (for creating the plots, managing parts of data, etc...) are not shown in this repository.
 
 **Built With:** 
 
