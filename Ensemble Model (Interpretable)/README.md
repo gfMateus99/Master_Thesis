@@ -28,7 +28,7 @@ Ensemble Model (Interpretable)/
 ├─── README.md  
 </pre>
 
-## EAMDrift_model
+## EAMDrift model
 
 ### Getting Started:
 <pre>
@@ -50,7 +50,7 @@ Ensemble Model (Interpretable)/
 ### Output:
 
 
-## Example Usage (EAMDrift_model):
+## Example Usage (EAMDrift model):
 
 
 
