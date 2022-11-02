@@ -4,7 +4,7 @@
 
 **Thesis objective:** Master thesis developed in collaboration with Novobanco. The objective is to use interpretable machine learning models to predict computational usage of the novobanco data center. In addition, we develop a novel method using NLP techniques to explore the impact of human context on novobanco data center usage. 
 
-**Note:** This repository presents only the most important code scripts developed for the objective of this thesis. Some other scripts (for creating the plots, managing parts of data, etc...) are not shown in this script.
+**Note:** This repository presents only the most important code scripts developed for the objective of this thesis. Some other scripts (for creating the plots, managing parts of data, etc...) are not shown in this repository.
 
 **Built With:** 
 
@@ -14,8 +14,8 @@
 
 ### Ensemble Model (Interpretable)
 
-- **Ensemble Model -**
-  - Model that uses...
+- **Ensemble Model Files-** [Ensemble Model (Interpretable)]
+  - Folder with the ensemble Model. Inside this folder is an README.md file explainning how you can use this model with your own data.
 
 ### Baseline Models
 
@@ -65,7 +65,7 @@ The NOVA School of Science and Technology, the NOVA University Lisbon and the No
 </div>
 </p>
 
-
+[Ensemble Model (Interpretable)]: <https://github.com/gfMateus99/Master_Thesis/tree/main/Ensemble%20Model%20(Interpretable)>
 [Get_Tweets_Program.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Sentiment%20analysis%20%2B%20Topic%20modelling/Get_Tweets_Program.py>
 [Baseline_Models-ExponentialSmoothing.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-ExponentialSmoothing.py>
 [Baseline_Models-LSTM.py]: <https://github.com/gfMateus99/Master_Thesis/blob/main/Baseline%20Models/Baseline_Models-LSTM.py>
