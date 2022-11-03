@@ -1,20 +1,22 @@
 # Ensemble Model (Interpretable)
 
-
+### Preamble
 1) Ensemble
 2) Based on Mixure of Experts (weights)
 3) Interpretable model
 4) Real-time re-trainning
 5) Allows past, future, and static co-variates
 
-[1. Folder Structure](#folder_structure)
+### Organization of this document
+
+[1. Repository Structure](#folder_structure)
 [2. EAMDrift model](#EAMDrift_model)
 [3. Example Usage (EAMDrift model tutorial)](#usage_example)
 
 
 
 
-## <a name="folder_structure"></a> 1. Folder Structure:
+## <a name="folder_structure"></a> 1. Repository Structure:
 
 <pre>
 <b>Ensemble Model (Interpretable)/</b>  
@@ -108,8 +110,46 @@ Train the model with a specific darts.utils.data.TrainingDataset instance. These
 ## <a name="usage_example"></a> 3. Example Usage (EAMDrift model tutorial):
 
 <pre>
-Import dataset
+<b>Global folder</b>  
+│  
+├─── EAMDrift_model/  
+│  
+└─── YOUR_CODE.py
 </pre>
+
+**1. Imports**
+```python
+#Import Folder
+from EAMDrift_model.Ensemble_Model_Class import EAMDriftModel
+
+#Import dataset
+
+```
+
+**2. Create EAMDriftModel**
+```python
+ensemble_model = EAMDriftModel(timeseries_df_ = dataframe,                           
+                               columnToPredict_ = "CPU utilization (average)",          
+                               time_column_ = "date",
+                               models_to_use_ = models,
+                               dataTimeStep_ = "6H",
+                               #trainning_samples_size_ = 100,  
+                               trainning_points_ = 150,               
+                               prediction_points_ = 4,                
+                               to_extract_features_ = True)    
+     
+```
+
+**3. Create trainning set**
+```python
+trainning_dataframe_index, trainning_dataframe, errors = ensemble_model.create_trainning_set()
+```
+
+**4. Fit and predict**
+```python
+
+```
+
 
 
 
