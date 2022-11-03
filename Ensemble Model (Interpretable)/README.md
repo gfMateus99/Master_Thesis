@@ -42,7 +42,6 @@ Ensemble Model (Interpretable)/
 
 ### Methods and Parameters:
 
-<pre>
 
 <b>class darts.models.forecasting.arima.ARIMA(p=12, d=1, q=0, seasonal_order=(0, 0, 0, 0), trend=None, random_state=0)</b>
 
@@ -55,7 +54,6 @@ Ensemble Model (Interpretable)/
   seasonal_order (Tuple[int, int, int, int]) – The (P,D,Q,s) order of the seasonal component for the AR parameters, differences, MA parameters and periodicity.
 
   trend (str) – Parameter controlling the deterministic trend. ‘n’ indicates no trend, ‘c’ a constant term, ‘t’ linear trend in time, and ‘ct’ includes both. Default is ‘c’ for models without integration, and no trend for models with integration.
-</pre>
 
 
 ### Input:
