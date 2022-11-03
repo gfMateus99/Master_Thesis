@@ -112,7 +112,7 @@ Train the model with a specific darts.utils.data.TrainingDataset instance. These
 <pre>
 <b>Global folder</b>  
 │  
-├─── EAMDrift_model/  
+├─── EAMDrift_model  
 │  
 └─── YOUR_CODE.py
 </pre>
