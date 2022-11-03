@@ -41,9 +41,22 @@ Ensemble Model (Interpretable)/
 </pre>
 
 ### Methods and Parameters:
+
 <pre>
-1
+
+<b>class darts.models.forecasting.arima.ARIMA(p=12, d=1, q=0, seasonal_order=(0, 0, 0, 0), trend=None, random_state=0)</b>
+
+<b>Parameters</b>
+ - p (int) – Order (number of time lags) of the autoregressive model (AR).
+ - d (int) – The order of differentiation; i.e., the number of times the data have had past values subtracted (I).
+
+  q (int) – The size of the moving average window (MA).
+
+  seasonal_order (Tuple[int, int, int, int]) – The (P,D,Q,s) order of the seasonal component for the AR parameters, differences, MA parameters and periodicity.
+
+  trend (str) – Parameter controlling the deterministic trend. ‘n’ indicates no trend, ‘c’ a constant term, ‘t’ linear trend in time, and ‘ct’ includes both. Default is ‘c’ for models without integration, and no trend for models with integration.
 </pre>
+
 
 ### Input:
 
