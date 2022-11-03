@@ -78,24 +78,20 @@ This model depends on the following Python packages:
  - to_extract_features_(bool)
 
 #### Methods
+[create_trainning_set()](#create_trainning_set) - Split dataframe in subsets to train the ensemble model
 
-[create_trainning_set()](create_trainning_set()) - Split dataframe in subsets to train the ensemble model
+[fit()](#fit) - Fit/train the model on one series.
 
-[fit()](fit()) - Fit/train the model on one series.
-
-[historical_forecasts()](historical_forecasts()) - Compute the historical forecasts that would have been obtained by this model on the series.
-
+[historical_forecasts()](#historical_forecasts) - Compute the historical forecasts that would have been obtained by this model on the series.
 
 
 ##### <a name="create_trainning_set"></a> create_trainning_set()
 ##### <a name="fit"></a> fit()
 Train the model with a specific darts.utils.data.TrainingDataset instance. These datasets implement a PyTorch Dataset, and specify how the target and covariates are sliced for training
-
 **Returns:** Fitted model.
 **Returns type:** self.
 
 ##### <a name="historical_forecasts"></a> historical_forecasts()
-
 
 ## Example Usage (EAMDrift model tutorial):
 
