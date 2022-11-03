@@ -7,7 +7,14 @@
 4) Real-time re-trainning
 5) Allows past, future, and static co-variates
 
-## Folder Structure
+[1. Folder Structure](#folder_structure)
+[2. EAMDrift model](#EAMDrift_model)
+[3. Example Usage (EAMDrift model tutorial)](#usage_example)
+
+
+
+
+## <a name="folder_structure"></a> 1. Folder Structure:
 
 <pre>
 <b>Ensemble Model (Interpretable)/</b>  
@@ -29,19 +36,19 @@
 
 ### Files Descriptions
 
-**Ensemble_Model_Class.py**
+- **Ensemble_Model_Class.py**
 
-This script contains the code to apply anomaly detection methods to data from four sensors (water temperature, specific conductance, pH, dissolved oxygen) at six sites in the Logan River Observatory. 
+  - This script contains the code to apply anomaly detection methods to data from four sensors (water temperature, specific conductance, pH, dissolved oxygen) at six sites in the Logan River Observatory. 
 
-**Models.py**
+- **Models.py**
 
-**Ensemble_Model_Class.py**
+- **Ensemble_Model_Class.py**
 
-**ModelsDB files**
+- **ModelsDB files**
 
-**Run Model.py**
+- **Run Model.py**
 
-## EAMDrift model
+## <a name="EAMDrift_model"></a> 2. EAMDrift model:
 
 ### Prerequisites:
 
@@ -59,7 +66,7 @@ This model depends on the following Python packages:
 - warnings
 
 ### EAMDrift:
-_____________________________________________________
+# 
 
 
 <b>class EAMDriftModel(```timeseries_df_, columnToPredict_, time_column_, models_to_use_, dataTimeStep_,
@@ -80,7 +87,7 @@ _____________________________________________________
  - to_extract_features_(bool)
 
 #### Methods
-_____________________________________________________
+# 
 
 | Method | Description |
 | :---:   | :---: |
@@ -98,10 +105,10 @@ Train the model with a specific darts.utils.data.TrainingDataset instance. These
 
 ##### <a name="historical_forecasts"></a> historical_forecasts()
 
-## Example Usage (EAMDrift model tutorial):
+## <a name="usage_example"></a> 3. Example Usage (EAMDrift model tutorial):
 
 <pre>
-
+Import dataset
 </pre>
 
 
