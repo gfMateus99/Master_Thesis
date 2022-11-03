@@ -1,6 +1,5 @@
 # Ensemble Model (Interpretable)
 
-## Preamble
 
 1) Ensemble
 2) Based on Mixure of Experts (weights)
@@ -11,58 +10,98 @@
 ## Folder Structure
 
 <pre>
-Ensemble Model (Interpretable)/  
+<b>Ensemble Model (Interpretable)/</b>  
 │  
-├─── EAMDrift_model/  
+├─── <b>EAMDrift_model/</b>  
 │    ├─── Ensemble_Model_Class.py  
 │    ├─── Models.py  
-│    ├─── ModelsDB/  
+│    └─── <b>ModelsDB/</b>  
 │         ├─── ExponentialSmoothingClass.py  
 │         ├─── Prophet.py  
 │         ├─── SARIMA.py  
 │         ├─── LSTM.py  
-│         ├─── other_model.py  
+│         └─── other_model.py  
 │  
 ├─── Run Model.py  
 │  
-├─── README.md  
+└─── README.md  
 </pre>
+
+### Files Descriptions
+
+**Ensemble_Model_Class.py**
+
+This script contains the code to apply anomaly detection methods to data from four sensors (water temperature, specific conductance, pH, dissolved oxygen) at six sites in the Logan River Observatory. 
+
+**Models.py**
+
+**Ensemble_Model_Class.py**
+
+**ModelsDB files**
+
+**Run Model.py**
 
 ## EAMDrift model
 
-### Getting Started:
-<pre>
-1
-</pre>
-
 ### Prerequisites:
-<pre>
-1
-</pre>
 
-### Methods and Parameters:
+This model depends on the following Python packages:
 
+- darts
+- river
+- numpy
+- pandas
+- sklearn
+- math
+- typing
+- tqdm
+- datetime
+- warnings
 
-<b>class darts.models.forecasting.arima.ARIMA(p=12, d=1, q=0, seasonal_order=(0, 0, 0, 0), trend=None, random_state=0)</b>
+### EAMDrift:
+
+<b>class EAMDriftModel(```timeseries_df_, columnToPredict_, time_column_, models_to_use_, dataTimeStep_,
+                       trainning_samples_size_ = None,
+                       trainning_points_ = 150,
+                       prediction_points_ = 4,
+                       to_extract_features_ = True```)</b>
 
 <b>Parameters</b>
- - p (int) – Order (number of time lags) of the autoregressive model (AR).
- - d (int) – The order of differentiation; i.e., the number of times the data have had past values subtracted (I).
+ - timeseries_df_(object) - Number of time steps to be input to the forecasting module.
+ - columnToPredict_(str)
+ - time_column_(str)
+ - models_to_use_(list)
+ - dataTimeStep_(str)
+ - trainning_samples_size_(Optional[int])
+ - trainning_points_(int)
+ - prediction_points_(int)
+ - to_extract_features_(bool)
 
-  q (int) – The size of the moving average window (MA).
+#### Methods
 
-  seasonal_order (Tuple[int, int, int, int]) – The (P,D,Q,s) order of the seasonal component for the AR parameters, differences, MA parameters and periodicity.
+[create_trainning_set()](create_trainning_set()) - Split dataframe in subsets to train the ensemble model
 
-  trend (str) – Parameter controlling the deterministic trend. ‘n’ indicates no trend, ‘c’ a constant term, ‘t’ linear trend in time, and ‘ct’ includes both. Default is ‘c’ for models without integration, and no trend for models with integration.
+[fit()](fit()) - Fit/train the model on one series.
 
-
-### Input:
-
-### Output:
+[historical_forecasts()](historical_forecasts()) - Compute the historical forecasts that would have been obtained by this model on the series.
 
 
-## Example Usage (EAMDrift model):
 
+##### <a name="create_trainning_set"></a> create_trainning_set()
+##### <a name="fit"></a> fit()
+Train the model with a specific darts.utils.data.TrainingDataset instance. These datasets implement a PyTorch Dataset, and specify how the target and covariates are sliced for training
+
+**Returns:** Fitted model.
+**Returns type:** self.
+
+##### <a name="historical_forecasts"></a> historical_forecasts()
+
+
+## Example Usage (EAMDrift model tutorial):
+
+<pre>
+
+</pre>
 
 
 
