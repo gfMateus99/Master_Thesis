@@ -14,7 +14,7 @@
 
 ### Ensemble Model (Interpretable)
 
-- **EAMDrift-** [EAMDrift Model]
+- **EAMDrift -** [EAMDrift Model]
   - Repository with the ensemble Model. Inside this repository is an [README.md] file explainning how you can use this model with your own data.
 
 ### Baseline Models
