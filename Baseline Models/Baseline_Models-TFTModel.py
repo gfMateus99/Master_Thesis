@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Sep  2 15:27:15 2022
+Created on Fri Sep 15 15:27:15 2022
 
-Baseline study - LSTM Model
-#https://unit8co.github.io/darts/generated_api/darts.models.forecasting.rnn_model.html?highlight=rnnmodel#darts.models.forecasting.rnn_model.RNNModel
+Baseline study - Transformer Model
+#https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf
 
 @author: Gonçalo Mateus
 """
@@ -19,17 +19,18 @@ from matplotlib import pyplot as plt
 from datetime import datetime, timedelta
 import torch.nn as nn
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+import numpy as np
+from darts.utils.likelihood_models import QuantileRegression
+
 from darts import TimeSeries
 from darts.dataprocessing.transformers import Scaler
 from darts.models import RNNModel
 from darts.utils.timeseries_generation import datetime_attribute_timeseries
-from darts.metrics import mae, mse, mape
+from darts.metrics import mae, mse
+from darts.models import TFTModel
 
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
-
-#from statsmodels.graphics.tsaplots import plot_acf
-#from statsmodels.graphics.tsaplots import plot_pacf
 from statsmodels.tsa.stattools import adfuller
 
 import logging
@@ -185,9 +186,9 @@ def split_dataframe(file, date_to_split, trainDays_range, name):
     val = series[finalTrain:finalValidation]  
     train_df = file[0:finalTrain]
     val_df = file[finalTrain:finalValidation]  
-        
+    
     #train = train[-600:]
-    train_df = train_df[-600:]
+    #train_df = train_df[-600:]
     
     series = series[0:finalValidation]
     #series = series[-720:]
@@ -204,12 +205,14 @@ def split_dataframe(file, date_to_split, trainDays_range, name):
     return train, val, series, train_df, val_df
 
 
-#%% Functions to support LSTM model
-def run_lstm_model(transformer, trainTransformed, valTransformed, series, train_df, date_split, model_="LSTM", hidden_dim_=20, 
-                   dropout_=0, batch_size_=16, n_epochs_=300, lr=1e-5, n_rnn_layers_=1, model_name_="Lstm_model", 
-                   random_state_=42, training_length_=32, input_chunk_length_=28, loss = "MSE", id_op = None):
+#%% Functions to support TransformerModel model
+def run_transformer_model(transformer, trainTransformed, valTransformed, series, date_split, 
+                   model_="TransformerModel", dropout_=0, batch_size_=16, n_epochs_=300, 
+                   lr=1e-5, model_name_="Lstm_model", random_state_=42, 
+                   input_chunk_length_=28, loss = "MSE", output_chunk_length_=4, 
+                   activation_='relu',train=None, val=None, covariates_array=[]):
     """
-        Return lstm model, mae_cross_val, mse_cross_val with given definitions
+        Return TransformerModel model, mae_cross_val, mse_cross_val with given definitions
         
         transformer - trasnformer created to scale the data
         trainTransformed - data to be trained
@@ -219,20 +222,36 @@ def run_lstm_model(transformer, trainTransformed, valTransformed, series, train_
     """
         
     # 1: Create month and year covariate series
-    year_series = datetime_attribute_timeseries(
-        pd.date_range(start=series.start_time(), freq=series.freq_str, periods=1600),
-        attribute="year",
-        one_hot=False,
+    # create year, month and integer index covariate series
+    covariates = datetime_attribute_timeseries(series, attribute="year", one_hot=False)
+    covariates = covariates.stack(
+        datetime_attribute_timeseries(series, attribute="month", one_hot=False)
     )
-    
-    year_series = Scaler().fit_transform(year_series)
-    month_series = datetime_attribute_timeseries(
-        year_series, attribute="month", one_hot=True
+    covariates = covariates.stack(
+        TimeSeries.from_times_and_values(
+            times=series.time_index,
+            values=np.arange(len(series)),
+            columns=["linear_increase"],
+        )
     )
+
+    if (len(covariates_array)!=0):
+        ram_series = pd.concat([train, val], ignore_index=True)
+        ram_series = TimeSeries.from_dataframe(ram_series, 'date', covariates_array, freq='6H')  
+        #ram_series = Scaler().fit_transform(ram_series)
+        covariates = covariates.stack(ram_series)
+
+    covariates = covariates.astype(np.float32)
     
-    covariates = year_series.stack(month_series)
-    cov_train, cov_val = covariates.split_before(date_split)
+    # transform covariates (note: we fit the transformer on train split and can then transform the entire covariates series)
+    scaler_covs = Scaler()
+    cov_train, cov_val = covariates.split_before(date_split+datetime.timedelta(hours=18))
+    scaler_covs.fit(cov_train)
+    covariates_transformed = scaler_covs.transform(covariates)
+
+
     
+
     ll = nn.MSELoss()
     if loss == "l1": 
         ll = nn.L1Loss()
@@ -245,50 +264,61 @@ def run_lstm_model(transformer, trainTransformed, valTransformed, series, train_
         min_delta=0.05,
         mode='min',
     )
-
-    # 2: Define the model
-    model = RNNModel(
-        model=model_,
-        hidden_dim=hidden_dim_,
+    
+    # 2: Define the model      
+    quantiles = [0.01,
+                0.05,
+                0.1,
+                0.15,
+                0.2,
+                0.25,
+                0.3,
+                0.4,
+                0.5,
+                0.6,
+                0.7,
+                0.75,
+                0.8,
+                0.85,
+                0.9,
+                0.95,
+                0.99]
+    
+    forecast_horizon = 4
+    model = TFTModel(
+        input_chunk_length=input_chunk_length_,
+        output_chunk_length=forecast_horizon,
+        optimizer_kwargs={"lr": lr},
+        hidden_size=64,
+        lstm_layers=1,
+        num_attention_heads=4,
         dropout=dropout_,
         batch_size=batch_size_,
-        n_epochs=n_epochs_,
-        optimizer_kwargs={"lr": lr},
-        model_name=model_name_,
-        loss_fn= ll,
-        log_tensorboard=True,
-        random_state=random_state_,
-        training_length=training_length_,
-        input_chunk_length=input_chunk_length_,
-        n_rnn_layers=n_rnn_layers_,
-        force_reset=True,
-        save_checkpoints=True,
-        pl_trainer_kwargs={"callbacks": [my_stopper], "accelerator": "cpu"}
-        #{"accelerator": "gpu", "gpus": -1, "auto_select_gpus": True}
+        n_epochs=300,
+        add_relative_index=False,
+        add_encoders=None,
+        likelihood=QuantileRegression(
+            quantiles=quantiles
+        ),  # QuantileRegression is set per default
+        # loss_fn=MSELoss(),
+        random_state=42,
+        pl_trainer_kwargs={"callbacks": [my_stopper],"accelerator": "cpu"}
     )
-    
-    
-    #ram_used = TimeSeries.from_dataframe(train_df, 'date', 'RAM used', freq='6H')
-    #ram_used = transformer.fit_transform(ram_used)
-    
     
     
     # 3: Fit the model
     model.fit(
         trainTransformed,
-        future_covariates=covariates,
-        val_series=val_transformed,
-        val_future_covariates=covariates,
-        #past_covariates=ram_used,
+        future_covariates=covariates_transformed,
         verbose=False
     )
     
     backtest_series = model.historical_forecasts(
         series,
-        future_covariates=covariates,
+        future_covariates=covariates_transformed,
         start=date_split,
         forecast_horizon=4,
-        retrain=True,
+        retrain=False,
         verbose=False,
     )
 
@@ -296,7 +326,6 @@ def run_lstm_model(transformer, trainTransformed, valTransformed, series, train_
     series.plot(label="actual")
     backtest_series.plot(label="backtest")
     plt.legend()
-    plt.show()
     plt.title("Backtest, starting Jan 1959, 6-months horizon")
     
     # 4: Compute errors
@@ -305,19 +334,9 @@ def run_lstm_model(transformer, trainTransformed, valTransformed, series, train_
     mape_cross_val = mean_absolute_percentage_error(transformer.inverse_transform(series)._xa.values.flatten()[-120:], 
                                          transformer.inverse_transform(backtest_series)._xa.values.flatten()) 
     
-    if (id_op != None):
-        dates_aux_save = []
-        for x in series._xa.date.values[-120:]:
-            dates_aux_save.append(str(x))
-            
-        aux_res = pd.DataFrame(transformer.inverse_transform(backtest_series)._xa.values.flatten(), columns=['y_pred'])
-        aux_res['y_val'] = transformer.inverse_transform(series)._xa.values.flatten()[-120:]
-        aux_res["date"] = dates_aux_save
-        aux_res.to_csv("lstm_"+ str(id_op)  +".csv")
-    
     return model, mae_cross_val, mse_cross_val, mape_cross_val
 
-def get_best_model(transformer, trainTransformed, valTransformed, seriesTransformed, train_df, date_split):
+def get_best_model(transformer, trainTransformed, valTransformed, seriesTransformed, date_split, train_df, val_df):
     """
         Function to find the best parameters for the lstm model
         
@@ -327,42 +346,37 @@ def get_best_model(transformer, trainTransformed, valTransformed, seriesTransfor
         series - series of all data 
         date_split - date to split train and validation sets
     """
-    n_layers = range(1, 5)
     n_dropout= [0,0.15,0.3,0.5] 
-    hid_dim = [5,10,20,50,100,150]
     lr = [1e-3,1e-4,1e-5]
-    
-    n_layers = range(1, 3)
-    n_dropout= [0,0.15, 0.3] 
-    hid_dim = [5,10,50,150]
-    lr = [1e-3,1e-5]
-    
-    loss = ["MSE", "l1"]
-    combinations = [(x[0],x[1],x[2],x[3],x[4]) for x in list(itertools.product(n_layers,n_dropout,hid_dim,lr,loss))]
+    input_chunk_length = [28, 56]
+    batch_size = [16, 32]
+    combinations = [(x[0],x[1],x[2],x[3]) for x in list(itertools.product(n_dropout,lr,input_chunk_length, batch_size))]
     
     best_mae = math.inf
     best_mse = math.inf
+    best_specs = (0,0,0)
     best_mape = math.inf
-    best_specs = (0,0,0,0,0)
     
     for x in tqdm(combinations):
-        lstm_model, mae_cross_val, mse_cross_val, mape_cross_val = run_lstm_model(transformer,
+        lstm_model, mae_cross_val, mse_cross_val, mape_cross_val = run_transformer_model(transformer, 
                                                                   trainTransformed, 
                                                                   valTransformed, 
                                                                   seriesTransformed, 
-                                                                  train_df,
-                                                                  date-datetime.timedelta(hours=18),
-                                                                  n_rnn_layers_=x[0], 
-                                                                  dropout_=x[1], 
-                                                                  hidden_dim_=x[2], 
-                                                                  lr=x[3],
-                                                                  loss=x[4])
- 
+                                                                  date-datetime.timedelta(hours=18), 
+                                                                  dropout_=x[0], 
+                                                                  lr=x[1],
+                                                                  input_chunk_length_=x[2],
+                                                                  batch_size_=x[3],
+                                                                  activation_='relu',
+                                                                  random_state_=42,
+                                                                  train = train_df, 
+                                                                  val = val_df)
+
         if mae_cross_val < best_mae:
             best_mae = mae_cross_val
             best_mse = mse_cross_val
-            best_mape = mape_cross_val
             best_specs = x
+            best_mape = mape_cross_val
                 
     return best_mae, best_mse, best_specs, best_mape
 
@@ -380,9 +394,18 @@ bl_layer_30_minutes = loadData("BL", "30_minutes")
 import datetime
 patterns_data, predictDates_6hours = load_patterns_data("6_hours")
 
-#%% INFO LSTM: Run Models - 6 hours step
+#%% INFO Transformer: Run Models - 6 hours step
 
 #Data corresponds to patterns that exists along servers
+
+#All the models were tested with different sets of covariates. These included: 
+#   -Write wait time
+#   -Filesystem Shrinking
+#   -Input Bandwidth
+#   -Output Bandwidth, 
+#   -Input non-unicast packets
+#   -RAM used
+#   -Round trip average.
 
 #For guaranteeing that information from the future was not being considered 
 #when making predictions on past values, each prediction was done by training 
@@ -395,11 +418,11 @@ patterns_data, predictDates_6hours = load_patterns_data("6_hours")
 #optimizer_cls – The PyTorch optimizer class to be used. Default: torch.optim.Adam.
 
 
-#%% LSTM
+#%% Transformer
 """
 names = os.listdir('Data/Patterns_files/6_hours')
 count = 0
-result_lstm = []
+result_transformer = []
 
 for server in patterns_data:
     print('# ================================================================')    
@@ -409,6 +432,67 @@ for server in patterns_data:
     dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
     
     for date in dates_to_split:
+        cross_validation_date = date
+                
+        # 1.1: Get dataframe
+        dataToAnalyze = server
+        
+        # 2: Split dataframe in train and validation set
+        train_timeseries, val_timeseries, series_timeseries, train_df, val_df= split_dataframe(dataToAnalyze, cross_validation_date, 30, names[count]+"--"+str(str(date).split(" ")[0]))
+
+        # 3: Statistics
+        #dataToAnalyze = dataToAnalyze.set_index('date')
+        #dataToAnalyze = dataToAnalyze.iloc[:,1:2]
+        #pre_process_statistics(dataToAnalyze)
+        
+        # 4: Normalize the time series 
+        transformer = Scaler()
+        train_transformed = transformer.fit_transform(train_timeseries)
+        val_transformed = transformer.transform(val_timeseries)
+        series_transformed = transformer.transform(series_timeseries)
+        
+        # 5: Get, define and fit the model
+        best_mae_cross_val, best_mse_cross_val, specs, mape_cross_val = get_best_model(transformer, train_transformed, val_transformed, series_transformed, date, train_df, val_df)
+
+        print('Model overview: ', specs)        
+        print('MAE_Cross: ', best_mae_cross_val)
+        print('MSE_Cross: ', best_mse_cross_val)
+        
+        result_transformer.append([names[count], specs, best_mae_cross_val, best_mse_cross_val])
+        
+        result_transformer_test = pd.DataFrame(result_transformer)
+        result_transformer_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
+        result_transformer_test.to_csv(f'Results/result_tftModel_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
+        
+        print('# ================================================================')    
+        
+    count += 1
+    
+    
+result_transformer = pd.DataFrame(result_transformer)
+result_transformer.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
+result_transformer.to_csv('Results/result_tftModel.csv')
+"""
+#%% Transformer
+"""
+
+names = os.listdir('Data/Patterns_files/6_hours')
+count = 0
+result_transformer = []
+
+for server in patterns_data:
+    print('# ================================================================')    
+    print(names[count]) #Pattern + Server name
+    
+    # 1: Get dates to split ranges
+    dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
+    
+    for date in dates_to_split:
+        print(date)
+        results_model = pd.read_csv(f'Results/result_tftModel_backup/result_tftModel_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv') 
+        
+        parameters = results_model.iloc[len(results_model)-1]["Specs"].split("(")[1].split(")")[0].split(",")
+
         
         cross_validation_date = date
                 
@@ -430,47 +514,71 @@ for server in patterns_data:
         series_transformed = transformer.transform(series_timeseries)
         
         # 5: Get, define and fit the model
-        best_mae_cross_val, best_mse_cross_val, specs = get_best_model(transformer, train_transformed, val_transformed, series_transformed, train_df,date)
+        #best_mae_cross_val, best_mse_cross_val, specs, mape_cross_val = get_best_model(transformer, train_transformed, val_transformed, series_transformed, date)
 
-        print('Model overview: ', specs)        
-        print('MAE_Cross: ', best_mae_cross_val)
-        print('MSE_Cross: ', best_mse_cross_val)
+        lstm_model, mae_cross_val, mse_cross_val, mape_cross_val = run_transformer_model(transformer, 
+                                                                  train_transformed, 
+                                                                  val_transformed,
+                                                                  series_transformed, 
+                                                                  date-datetime.timedelta(hours=18), 
+                                                                  dropout_=float(parameters[0]), 
+                                                                  lr=float(parameters[1]),
+                                                                  input_chunk_length_=int(parameters[2]),
+                                                                  batch_size_=int(parameters[3]),
+                                                                  activation_='relu',
+                                                                  random_state_=42,
+                                                                  train = train_df, 
+                                                                  val = val_df)
+
+
+        print('Model overview: ', parameters)        
+        print('MAE_Cross: ', mae_cross_val)
+        print('MSE_Cross: ', mse_cross_val)
+        print('Mape_Cross: ', mape_cross_val)
+       
+        result_transformer.append([names[count], parameters, mae_cross_val, mse_cross_val, mape_cross_val])
         
-        result_lstm.append([names[count], specs, best_mae_cross_val, best_mse_cross_val])
-        
-        result_lstm_test = pd.DataFrame(result_lstm)
-        result_lstm_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
-        result_lstm_test.to_csv(f'Results/result_lstm_backup/result_lstm_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
+        #result_transformer_test = pd.DataFrame(result_transformer)
+        #result_transformer_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
+        #result_transformer_test.to_csv(f'Results/result_transformer_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
         
         print('# ================================================================')    
         
     count += 1
     
-result_lstm = pd.DataFrame(result_lstm)
-result_lstm.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
-result_lstm.to_csv('Results/result_lstm.csv')
+result_transformer = pd.DataFrame(result_transformer)
+result_transformer.columns = ['Pattern', 'Specs', 'MAE', 'MSE', 'MAPE']
+result_transformer.to_csv('Results/result_tftModel(Normal_split).csv')
 """
-#%% LSTM
+
+#%% 8: Test with covariates
+
+combinations = [['Write wait time'],['RAM used'],
+ ['Round trip average'],
+ ['Write wait time', 'RAM used'],
+ ['Write wait time', 'Round trip average'],
+ ['RAM used', 'Round trip average'],
+ ['Write wait time', 'RAM used', 'Round trip average']]
+    
 
 names = os.listdir('Data/Patterns_files/6_hours')
 count = 0
-result_lstm = []
+result_transformer = []
 
 for server in patterns_data:
     print('# ================================================================')    
     print(names[count]) #Pattern + Server name
-        
+    
     # 1: Get dates to split ranges
     dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
-    date_count=0
+    
     for date in dates_to_split:
-        
-        if(count > 5):
-            
-            print(date)
-            results_model = pd.read_csv(f'Results/result_lstm_backup/result_lstm_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv') 
+        for comb in combinations:
+            print(comb)
+            results_model = pd.read_csv(f'Results/result_tftModel_backup/result_tftModel_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv') 
             
             parameters = results_model.iloc[len(results_model)-1]["Specs"].split("(")[1].split(")")[0].split(",")
+    
             
             cross_validation_date = date
                     
@@ -479,7 +587,7 @@ for server in patterns_data:
             
             # 2: Split dataframe in train and validation set
             train_timeseries, val_timeseries, series_timeseries, train_df, val_df= split_dataframe(dataToAnalyze, cross_validation_date, 30, names[count]+"--"+str(str(date).split(" ")[0]))
-    
+            
             # 3: Statistics
             #dataToAnalyze = dataToAnalyze.set_index('date')
             #dataToAnalyze = dataToAnalyze.iloc[:,1:2]
@@ -492,42 +600,47 @@ for server in patterns_data:
             series_transformed = transformer.transform(series_timeseries)
             
             # 5: Get, define and fit the model
-            #best_mae_cross_val, best_mse_cross_val, specs, mape = get_best_model(transformer, train_transformed, val_transformed, series_transformed, train_df, date)
+            #best_mae_cross_val, best_mse_cross_val, specs, mape_cross_val = get_best_model(transformer, train_transformed, val_transformed, series_transformed, date)
     
-    
-            model, mae_cross_val, mse_cross_val, mape_cross_val = run_lstm_model(transformer,
+            lstm_model, mae_cross_val, mse_cross_val, mape_cross_val = run_transformer_model(transformer, 
                                                                       train_transformed, 
-                                                                      val_transformed, 
-                                                                      series_transformed,
-                                                                      train_df,
-                                                                      date-datetime.timedelta(hours=18),
-                                                                      n_rnn_layers_=int(parameters[0]), 
-                                                                      dropout_=float(parameters[1]), 
-                                                                      hidden_dim_=int(parameters[2]), 
-                                                                      lr=float(parameters[3]),
-                                                                      loss=parameters[4].split("'")[1],
-                                                                      id_op =  str(count) + "_" + str(date_count))
+                                                                      val_transformed,
+                                                                      series_transformed, 
+                                                                      date-datetime.timedelta(hours=18), 
+                                                                      dropout_=float(parameters[0]), 
+                                                                      lr=float(parameters[1]),
+                                                                      input_chunk_length_=int(parameters[2]),
+                                                                      batch_size_=int(parameters[3]),
+                                                                      activation_='relu',
+                                                                      random_state_=42,
+                                                                      train = train_df, 
+                                                                      val = val_df,
+                                                                      covariates_array=comb)
     
             print('Model overview: ', parameters)        
             print('MAE_Cross: ', mae_cross_val)
             print('MSE_Cross: ', mse_cross_val)
-            print('MAPE_Cross: ', mape_cross_val)
+            print('Mape_Cross: ', mape_cross_val)
+           
+            result_transformer.append([names[count], comb, mae_cross_val, mse_cross_val, mape_cross_val])
             
-            result_lstm.append([names[count], parameters, mae_cross_val, mse_cross_val, mape_cross_val])
-            result_lstm_test = pd.DataFrame(result_lstm)
-            result_lstm_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE', 'MAPE']
-            #result_lstm_test.to_csv(f'Results/result_lstm_backup/result_lstm_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
-            date_count = date_count +1
+            #result_transformer_test = pd.DataFrame(result_transformer)
+            #result_transformer_test.columns = ['Pattern', 'Specs', 'MAE', 'MSE']
+            #result_transformer_test.to_csv(f'Results/result_transformer_test({names[count].split("(")[0]}_{str(str(date).split(" ")[0])}).csv')
+            
             print('# ================================================================')    
-            
+        
     count += 1
     
-result_lstm = pd.DataFrame(result_lstm)
-result_lstm.columns = ['Pattern', 'Specs', 'MAE', 'MSE', 'MAPE']
-result_lstm.to_csv('Results/result_lstm(covariates).csv')
+result_transformer = pd.DataFrame(result_transformer)
+result_transformer.columns = ['Pattern', 'Specs', 'MAE', 'MSE', 'MAPE']
+result_transformer.to_csv('Results/result_tftModel(all_combinations).csv')
 
 
 
-# 8: Test with covariates
+
+
+
+
 
 

@@ -26,7 +26,7 @@ from statsmodels.tsa.stattools import adfuller
 from itertools import product
 from darts.models import ARIMA
 from tqdm import tqdm
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
 
 import warnings
@@ -175,8 +175,14 @@ def split_dataframe(file, date_to_split, trainDays_range, name):
     series = TimeSeries.from_dataframe(file, 'date', 'CPU utilization (average)', freq='6H')
     
     train = series[0:finalTrain]
+    #train = train[-600:]
+    
+    
     val = series[finalTrain:finalValidation]  
+    
     train_df = file[0:finalTrain]
+    #train_df = train_df[-600:]
+    
     val_df = file[finalTrain:finalValidation]  
     
     plt.figure (figsize = (13, 7))
@@ -186,7 +192,7 @@ def split_dataframe(file, date_to_split, trainDays_range, name):
     plt.ylabel("CPU utilization (average)", size=14)
     plt.title(name)
     plt.legend()
-    plt.savefig('Plots/PredictGraphs/'+name+'.pdf', bbox_inches='tight')
+    #plt.savefig('Plots/PredictGraphs/'+name+'.pdf', bbox_inches='tight')
     
     return train, val, train_df, val_df
 
@@ -273,11 +279,12 @@ def compute_errors(forecast, val, periods):
     
     mae_cross_val = mean_absolute_error(forecast, val)
     mse_cross_val = mean_squared_error(forecast, val)
-    
+    mape = mean_absolute_percentage_error(forecast, val)
+
     #print('MAE: ', mae_cross_val)
     #print('MSE: ', mse_cross_val)
     
-    return mae_cross_val, mse_cross_val
+    return mae_cross_val, mse_cross_val, mape
 
 #%% Load files
 
@@ -296,15 +303,6 @@ patterns_data, predictDates_6hours = load_patterns_data("6_hours")
 #%% INFO SARIMA: Run Models - 6 hours step
 
 #Data corresponds to patterns that exists along servers
-
-#All the models were tested with different sets of covariates. These included: 
-#   -Write wait time
-#   -Filesystem Shrinking
-#   -Input Bandwidth
-#   -Output Bandwidth, 
-#   -Input non-unicast packets
-#   -RAM used
-#   -Round trip average.
 
 #For guaranteeing that information from the future was not being considered 
 #when making predictions on past values, each prediction was done by training 
@@ -403,31 +401,36 @@ result_sarima = []
 for server in patterns_data:
     print('# ================================================================')    
     #print(names[count]) #Pattern + Server name
-    
+        
     # 1: Get dataframe and dates to split ranges
     dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
+    date_count=0
     for date in dates_to_split:
         print(names[count]+"--"+str(str(date).split(" ")[0])+".csv")
         results_model = pd.read_csv('Results/result_sarima_statistics/'+names[count]+"--"+str(str(date).split(" ")[0])+".csv") 
         
         parameters = results_model.iloc[0]["(p, d, q)x(P, D, Q)"].split("(")[1].split(")")[0].split(",")
-        
+        print(parameters)
         cross_validation_date = date
 
         mae_cross = []
         mse_cross = []
+        mape_cross = []
+        
+        dataframe_results_pred = []
+        dataframe_results_val = []
+        dataframe_results_dates = []
         
         for x in tqdm(range(0, 29)):
-        
             dataToAnalyze = server
             # 2: Split dataframe in train and validation set
-            train_timeseries, val_timeseries, train_df, val_df = split_dataframe(dataToAnalyze, date, 1, names[count]+"--"+str(str(date).split(" ")[0]))
+            train_timeseries, val_timeseries, train_df, val_df = split_dataframe(dataToAnalyze, cross_validation_date, 1, names[count]+"--"+str(str(date).split(" ")[0]))
             
             # 4: Standardize the data
-            #mean_y = train_timeseries._xa.values.flatten().mean()
-            #std_y = train_timeseries._xa.values.flatten().std()
+            mean_y = train_timeseries._xa.values.flatten().mean()
+            std_y = train_timeseries._xa.values.flatten().std()
             train_timeseries = train_timeseries._xa.values.flatten()
-            #train_timeseries = (train_timeseries-mean_y)/std_y
+            train_timeseries = (train_timeseries-mean_y)/std_y
 
             sarima_model = run_sarima_model(train_timeseries, val_timeseries, int(parameters[0]), int(parameters[1]), int(parameters[2]), int(parameters[3]), int(parameters[4]), int(parameters[5]), int(parameters[6]))
             
@@ -435,25 +438,44 @@ for server in patterns_data:
             #future = sarima_model.make_future_dataframe(periods=periods, freq="6H")
 
             forecast = sarima_model.predict(start=train_timeseries.shape[0], end=train_timeseries.shape[0]+3)
-            mae, mse = compute_errors(forecast, val_timeseries, periods)
+            
+            forecast = forecast*std_y+mean_y
+            
+            dates_aux_save = []
+            for y in val_df["date"].values:
+                dates_aux_save.append(str(y))
+               
+                        
+            mae, mse , mape = compute_errors(forecast, val_timeseries, periods)
+            
+            dataframe_results_pred = np.concatenate((dataframe_results_pred, forecast))     
+            dataframe_results_val = np.concatenate((dataframe_results_val, val_timeseries._xa.values.flatten()))  
+            dataframe_results_dates = np.concatenate((dataframe_results_dates, dates_aux_save))
             
             mae_cross.append(mae)
             mse_cross.append(mse)
+            mape_cross.append(mape)
                         
             cross_validation_date = cross_validation_date + datetime.timedelta(days=1)
 
         print('MAE_Cross: ', np.mean(mae_cross))
         print('MSE_Cross: ', np.mean(mse_cross))
+        print('MAPE_Cross: ', np.mean(mape_cross))
+
+        result_sarima.append([names[count], np.mean(mae_cross), np.mean(mse_cross), np.mean(mape_cross)])
         
-        result_sarima.append([names[count], np.mean(mae_cross), np.mean(mse_cross)])
-        
+        aux_res = pd.DataFrame(dataframe_results_pred, columns=['y_pred'])
+        aux_res['y_val'] = dataframe_results_val
+        aux_res["date"] = dataframe_results_dates
+        aux_res.to_csv("sarima_"+ str(count) + "_" + str(date_count)  +".csv")
+        date_count = date_count +1
         print('# ================================================================')
         
     count += 1
 
-result_sarima = pd.DataFrame(result_sarima)
-result_sarima.columns = ['server', 'MAE', 'MSE']
-result_sarima.to_csv('Results/result_sarima.csv')
+#result_sarima = pd.DataFrame(result_sarima)
+#result_sarima.columns = ['server', 'MAE', 'MSE', 'MAPE']
+#result_sarima.to_csv('Results/result_sarima(Blocked_150).csv')
 
 #Test with covariates
 

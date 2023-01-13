@@ -24,6 +24,9 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error 
 from tqdm import tqdm
 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -171,6 +174,8 @@ def split_dataframe(file, date_to_split, trainDays_range, name):
     finalValidation = file[file["date"] == date_to_split+datetime.timedelta(days=trainDays_range)].index[0]
     
     train_df = file[0:finalTrain]
+    #train_df = train_df[-600:]
+    
     val_df = file[finalTrain:finalValidation]
     
     return train_df, val_df
@@ -203,20 +208,19 @@ def run_prophet_model(prophet_dataframe, yearly_seasonality_val, daily_seasonali
 
     return model
 
-def compute_errors(forecast, val, periods):
+def compute_errors(forecast, val):
     """
         Compute model errors
         
         forecast - forecast
         val - validation set
-        periods - periods to validate
     """
         
     #Compute Errors (MAE and MSE)
     
-    mae_cross_val = mean_absolute_error(forecast['yhat'][-periods:], val['y'][:periods])
-    mse_cross_val = mean_squared_error(forecast['yhat'][-periods:], val['y'][:periods])
-    mape = mean_absolute_percentage_error(forecast['yhat'][-periods:], val['y'][:periods])
+    mae_cross_val = mean_absolute_error(forecast, val)
+    mse_cross_val = mean_squared_error(forecast, val)
+    mape = mean_absolute_percentage_error(forecast, val)
 
     #print('MAE: ', mae_cross_val)
     #print('MSE: ', mse_cross_val)
@@ -241,15 +245,6 @@ patterns_data, predictDates_6hours = load_patterns_data("6_hours")
 
 #Data corresponds to patterns that exists along servers
 
-#All the models were tested with different sets of covariates. These included: 
-#   -Write wait time
-#   -Filesystem Shrinking
-#   -Input Bandwidth
-#   -Output Bandwidth, 
-#   -Input non-unicast packets
-#   -RAM used
-#   -Round trip average.
-
 #For guaranteeing that information from the future was not being considered 
 #when making predictions on past values, each prediction was done by training 
 #the model with data until the day prior to the prediction and predicting the 
@@ -271,6 +266,7 @@ for server in patterns_data:
     
     # 1: Get dates to split ranges
     dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
+    date_count=0
     for date in dates_to_split:
         cross_validation_date = date
         
@@ -278,12 +274,13 @@ for server in patterns_data:
         mse_cross = []
         mape_cross = []
         
-        train_df_test, val_df_test = split_dataframe(server, cross_validation_date, 30, names[count]+"--"+str(str(date).split(" ")[0]))
-        val_df_test = val_df_test[["date", "CPU utilization (average)"]]
-        val_df_test.columns = ['ds', 'y']
-        val_df_test = val_df_test['y'][:120]
+        dataframe_results_pred = []
+        dataframe_results_val = []
+        dataframe_results_dates = []
         
-        forecast_test = []
+        toplot_forecast = []
+        
+        train_df_test, val_df_test = split_dataframe(server, cross_validation_date, 30, names[count]+"--"+str(str(date).split(" ")[0]))
         
         #30-times cross validation
         for x in tqdm(range(0, 30)):
@@ -306,12 +303,9 @@ for server in patterns_data:
             #pre_process_statistics(dataToAnalyze)
             
             # 4: Standardize the data
-            #mean_y = train_df["y"].mean()
-            #std_y = train_df["y"].std()
-            #train_df["y"] = (train_df["y"]-mean_y)/std_y
-            #mean_y = val_df["y"].mean()
-            #std_y = val_df["y"].std()
-            #val_df["y"] = (val_df["y"]-mean_y)/std_y
+            mean_y = train_df["y"].mean()
+            std_y = train_df["y"].std()
+            train_df["y"] = (train_df["y"]-mean_y)/std_y
             
             # 5: Get, define and fit the model
             prophet_model = run_prophet_model(train_df, True, True, 
@@ -321,20 +315,26 @@ for server in patterns_data:
             future = prophet_model.make_future_dataframe(periods=periods, freq="6H")
             forecast = prophet_model.predict(future)
             
+            y_pred = forecast['yhat'].values*std_y+mean_y
+            y_pred = pd.DataFrame(y_pred)
+            y_pred = y_pred[-periods:][0].values
+            toplot_forecast = np.concatenate((toplot_forecast, y_pred))
+
+            dates_aux_save = []
+            for y in val_df["ds"].values:
+                dates_aux_save.append(str(y))
+                
+            dataframe_results_dates = np.concatenate((dataframe_results_dates, dates_aux_save))
             
-            forecast_test = np.concatenate((forecast_test, forecast['yhat'][-periods:].values))
-            
-            
-            mae, mse, mape = compute_errors(forecast, val_df, periods)
+            dataframe_results_pred = np.concatenate((dataframe_results_pred, y_pred))
+
+            dataframe_results_val = np.concatenate((dataframe_results_val, val_df['y'][:periods])) 
+
+            mae, mse, mape = compute_errors(y_pred, val_df['y'][:periods])
             mae_cross.append(mae)
             mse_cross.append(mse)
             mape_cross.append(mape)
-            
-            # 6: Tunning - get an dataframe with parameters, corresponding AIC and BIC
-            #result_sarima = get_best_model(parameters_list, s, train_timeseries)
-            #print(result_sarima.iloc[0])
-            #result_sarima.to_csv('Results/'+names[count]+"--"+str(str(date).split(" ")[0]))
-            
+           
             
             cross_validation_date = cross_validation_date + datetime.timedelta(days=1)
             #print(cross_validation_date)
@@ -344,20 +344,32 @@ for server in patterns_data:
         print('MAPE_Cross: ', np.mean(mape_cross))
 
         result_prophet.append([names[count], np.mean(mae_cross), np.mean(mse_cross),  np.mean(mape_cross)])
+         
+        plt.figure (figsize = (20, 7))
         
-        ola = val_df_test.values     
-        ola = pd.DataFrame(ola)
-        ola["1"] = forecast_test
-        ola.plot()
+        #ax = sns.lineplot(y="CPU utilization (average)", x="date", data=train_df_test, color="blue")
+        ax = sns.lineplot(y="CPU utilization (average)", x="date", data=val_df_test, color="blue")
+        ax = sns.lineplot(y=toplot_forecast, x="date", data=val_df_test, color="orange")
+        ax.set_title(names[count]+"--"+str(str(date).split(" ")[0]), size=18)
+        plt.xticks(size=13)
+        plt.yticks(size=13)
+        plt.xlabel('Date', size=14)
+        plt.ylabel('CPU utilization (average)', size=14)
+        plt.show()
         
+        aux_res = pd.DataFrame(dataframe_results_pred, columns=['y_pred'])
+        aux_res['y_val'] = dataframe_results_val
+        aux_res["date"] = dataframe_results_dates
+        aux_res.to_csv("prophet_"+ str(count) + "_" + str(date_count)  +".csv")
+        date_count = date_count +1
+           
         print('# ================================================================')    
-        # 7: With the best model test with cross validation
         
     count += 1
     
-result_prophet = pd.DataFrame(result_prophet)
-result_prophet.columns = ['server', 'MAE', 'MSE', 'MAPE']
-#result_prophet.to_csv('Results/result_prophet_aux(1).csv')
+#result_prophet = pd.DataFrame(result_prophet)
+#result_prophet.columns = ['server', 'MAE', 'MSE', 'MAPE']
+#result_prophet.to_csv('Results/result_prophet_aux(150).csv')
 
 # 8: Test with covariates
 

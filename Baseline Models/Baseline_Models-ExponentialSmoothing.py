@@ -22,7 +22,7 @@ from statsmodels.tsa.stattools import adfuller
 from matplotlib import pyplot as plt
 
 from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 from tqdm import tqdm
 
 from darts.models import ExponentialSmoothing
@@ -176,19 +176,12 @@ def split_dataframe(file, date_to_split, trainDays_range, name):
     series = TimeSeries.from_dataframe(file, 'date', 'CPU utilization (average)', freq='6H')
     
     train = series[0:finalTrain]
+    #train = train[-600:]
+    
     val = series[finalTrain:finalValidation]  
     train_df = file[0:finalTrain]
     val_df = file[finalTrain:finalValidation]  
-    
-    plt.figure (figsize = (13, 7))
-    train.plot()
-    val.plot()
-    plt.xlabel('Date', size=14)
-    plt.ylabel("CPU utilization (average)", size=14)
-    plt.title(name)
-    plt.legend()
-    plt.savefig('Plots/PredictGraphs/'+name+'.pdf', bbox_inches='tight')
-    
+        
     return train, val, train_df, val_df
 
 
@@ -226,11 +219,12 @@ def compute_errors(forecast, val, periods):
     #Compute Errors (MAE and MSE)
     mae_cross_val = mean_absolute_error(forecast, val[:periods])
     mse_cross_val = mean_squared_error(forecast, val[:periods])
-    
+    mape = mean_absolute_percentage_error(forecast, val[:periods])
+
     #print('MAE: ', mae_cross_val)
     #print('MSE: ', mse_cross_val)
     
-    return mae_cross_val, mse_cross_val
+    return mae_cross_val, mse_cross_val, mape
 
 #%% Load files
 
@@ -250,14 +244,6 @@ patterns_data, predictDates_6hours = load_patterns_data("6_hours")
 
 #Data corresponds to patterns that exists along servers
 
-#All the models were tested with different sets of covariates. These included: 
-#   -Write wait time
-#   -Filesystem Shrinking
-#   -Input Bandwidth
-#   -Output Bandwidth, 
-#   -Input non-unicast packets
-#   -RAM used
-#   -Round trip average.
 
 #For guaranteeing that information from the future was not being considered 
 #when making predictions on past values, each prediction was done by training 
@@ -278,16 +264,28 @@ for server in patterns_data:
     print('# ================================================================')    
     print(names[count]) #Pattern + Server name
     
+    # 4: Standardize the data
+    mean_y = server["CPU utilization (average)"].mean()
+    std_y = server["CPU utilization (average)"].std()
+    server["CPU utilization (average)"] = (server["CPU utilization (average)"]-mean_y)/std_y
+    
     # 1: Get dates to split ranges
     dates_to_split = get_dates_to_predict(predictDates_6hours, names[count])
+    date_count=0
     for date in dates_to_split:
         cross_validation_date = date
         
         mae_cross = []
         mse_cross = []
+        mape_cross = []
+        
+        dataframe_results_pred = []
+        dataframe_results_val = []
+        dataframe_results_dates = []
         
         #30-times cross validation
         for x in tqdm(range(0, 29)):
+            
             
             # 1.1: Get dataframe
             dataToAnalyze = server
@@ -299,15 +297,7 @@ for server in patterns_data:
             #dataToAnalyze = dataToAnalyze.set_index('date')
             #dataToAnalyze = dataToAnalyze.iloc[:,1:2]
             #pre_process_statistics(dataToAnalyze)
-            
-            # 4: Standardize the data
-            #mean_y = train_df["y"].mean()
-            #std_y = train_df["y"].std()
-            #train_df["y"] = (train_df["y"]-mean_y)/std_y
-            #mean_y = val_df["y"].mean()
-            #std_y = val_df["y"].std()
-            #val_df["y"] = (val_df["y"]-mean_y)/std_y
-            
+                        
             # 5: Get, define and fit the model
             seasonal = 28
             exponential_smoothing_model = run_exponential_smoothing_model(train_timeseries, seasonal)
@@ -315,26 +305,45 @@ for server in patterns_data:
             periods = 4        
             forecast = exponential_smoothing_model.predict(periods)
             
-            mae, mse = compute_errors(forecast._xa.values.flatten(), val_df["CPU utilization (average)"], periods)
+            y_pred = (forecast._xa.values.flatten())*std_y+mean_y
+            dataframe_results_pred = np.concatenate((dataframe_results_pred, y_pred))     
+            
+            y_val = val_df["CPU utilization (average)"]*std_y+mean_y
+            dataframe_results_val = np.concatenate((dataframe_results_val, y_val))      
+            
+            dates_aux_save = []
+            for x in val_df["date"].values:
+                dates_aux_save.append(str(x))
+                
+            dataframe_results_dates = np.concatenate((dataframe_results_dates, dates_aux_save))
+            
+            mae, mse, mape = compute_errors(y_pred, y_val, periods)
             mae_cross.append(mae)
             mse_cross.append(mse)           
+            mape_cross.append(mape)
             
             cross_validation_date = cross_validation_date + datetime.timedelta(days=1)
-            #print(cross_validation_date)
             
         print('MAE_Cross: ', np.mean(mae_cross))
         print('MSE_Cross: ', np.mean(mse_cross))
+        print('MAPE_Cross: ', np.mean(mape_cross))
+
+        result_exponential_smoothing.append([names[count], np.mean(mae_cross), np.mean(mse_cross), np.mean(mape_cross)])
         
-        result_exponential_smoothing.append([names[count], np.mean(mae_cross), np.mean(mse_cross)])
-        
+        aux_res = pd.DataFrame(dataframe_results_pred, columns=['y_pred'])
+        aux_res['y_val'] = dataframe_results_val
+        aux_res["date"] = dataframe_results_dates
+        aux_res.to_csv("exponentialsmoothing_"+ str(count) + "_" + str(date_count)  +".csv")
+        date_count = date_count +1
         print('# ================================================================')    
         # 7: With the best model test with cross validation
         
     count += 1
     
-result_exponential_smoothing = pd.DataFrame(result_exponential_smoothing)
-result_exponential_smoothing.columns = ['pattern', 'MAE', 'MSE']
-result_exponential_smoothing.to_csv(f'Results/result_exponential_smoothing(seasonal-{seasonal}).csv')
+#result_exponential_smoothing = pd.DataFrame(result_exponential_smoothing)
+#result_exponential_smoothing.columns = ['server', 'MAE', 'MSE', 'MAPE']
+#Blocked_150
+#result_exponential_smoothing.to_csv(f'Results/result_exponential_smoothing({seasonal})(Normal_split).csv')
 
 
 
